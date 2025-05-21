@@ -108,27 +108,18 @@ export default function Dashboard() {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-        post('/reservations', {
-            onSuccess: () => {
-                reset('room_id', 'start_time', 'end_time', 'purpose');
-                // Refresh reservations after successful submission
-                const fetchReservations = async () => {
-                    try {
-                        const response = await axios.get(`/api/reservations?date=${selectedDate}`);
-                        if (response.data.length === 0) {
-                            setUseExampleData(true);
-                        } else {
-                            setUseExampleData(false);
-                            setReservations(response.data);
-                        }
-                    } catch (error) {
-                        console.error('Error fetching reservations:', error);
-                        setUseExampleData(true);
-                    }
-                };
-                fetchReservations();
-            },
-        });
+
+        // Use the correct API endpoint with the room ID
+        axios.post(`/api/rooms/${data.room_id}/reservations`, {
+            start_date: `${data.date}T${data.start_time}:00`,
+            end_date: `${data.date}T${data.end_time}:00`,
+            purpose: data.purpose
+        })
+            .then(() => {
+            })
+            .catch(error => {
+                console.error('Error creating reservation:', error);
+            });
     };
 
     // Helper function to format time

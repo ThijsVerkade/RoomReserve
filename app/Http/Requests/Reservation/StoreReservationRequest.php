@@ -18,6 +18,7 @@ class StoreReservationRequest extends FormRequest
         return [
             'start_date' => ['required', 'date'],
             'end_date' => ['required', 'date', 'after:start_date'],
+            'purpose' => ['string'],
         ];
     }
 }

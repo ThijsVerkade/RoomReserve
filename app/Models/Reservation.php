@@ -15,6 +15,9 @@ class Reservation extends Model
     protected $fillable = [
         'start_date',
         'end_date',
+        'user_id',
+        'room_id',
+        'purpose',
     ];
 
     protected $casts = [

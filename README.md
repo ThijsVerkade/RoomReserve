@@ -1,94 +1,137 @@
-Write Laravel 12 feature test scenarios for creating a reservation on a room.
-Use the method name format:
-testReturns[StatusText]When [Condition]
+# 🏨 Room Reserve — Laravel 12 Demo Application
+
+**Room Reserve** is a demo Laravel 12 application that showcases AI-assisted, prompt-driven test-first development. It demonstrates how to automatically generate test scenarios and implement logic that conforms to modern Laravel and PHP best practices.
+
+---
+
+## ✨ Project Purpose
+
+This application demonstrates:
+
+- Generating **feature test scenarios** using AI-generated prompts.
+- Implementing **application logic** to pass those tests using TDD.
+- Applying **Laravel 12 best practices** including modern validation, routing, and service structures.
+
+---
+
+## 🧪 Feature Test Prompt Format
+
+To generate feature tests, we use the following structured prompt:
+
+```aiignore
+You are a Laravel 12 developer writing feature test scenarios for: {feature}.
+
+Use the method name format: testReturns[StatusText]When [Condition]
+
 Each scenario should include:
 - The expected HTTP status code (e.g., 200, 404, 201)
 - Whether the database is used or changed
 - Make use of factory for models
 - Relevant inputs (route, request data)
 - Expected response structure if applicable
-  Output just the scenario names + a brief explanation of what each test does in text docs for php.
+
+Output just the scenario names + a brief explanation of what each test does in text docs for php.
+```
+
+**Example Output:**
+```php
+/**
+ * testReturns201WhenReservationIsSuccessfullyCreated
+ *
+ * Tests that a room reservation is created successfully and returns a 201 status.
+ * Uses factories to create a user and room.
+ * POST /api/reservations with valid data.
+ * Asserts database has new reservation record.
+ * Expects response to include reservation ID and timestamps.
+ */
+```
+
+---
+
+## 🔧 Application Logic Prompt
+
+The application logic is written test-first based on these guidelines:
+
+```
+You are a Laravel 12 developer working test-first.
+
+Your task is to implement the application logic required to pass the existing feature tests.
+
+Follow PHP 8.2+ and modern Laravel best practices:
+- Use route model binding where applicable
+- Apply form request validation classes
+- Return proper HTTP status codes and JSON structures
+- Use Eloquent relationships and DB logic
+- Prevent logical conflicts (e.g. overlapping reservations)
+- Use service classes or policies when appropriate
+- Keep controllers focused (single responsibility)
+- Handle errors clearly and consistently
+
+Start by implementing the necessary controller methods. Output only the relevant code.
+```
+
+---
+
+## 🧱 Tech Stack
+
+- **Laravel 12 (PHP 8.2+)**
+- PHPUnit / Laravel Feature Tests
+- Eloquent ORM
+- Route Model Binding
+- Form Request Validation
+- Service Class Architecture
+
+---
+
+## 🚀 Getting Started
+
+```bash
+git clone https://github.com/your-org/room-reserve.git
+cd room-reserve
+composer install
+cp .env.example .env
+php artisan key:generate
+php artisan migrate --seed
+php artisan serve
+```
+
+To run tests:
+
+```bash
+php artisan test
+```
 
 
-// Feature test scenarios for creating a reservation on a room using Laravel 12
+---
 
-// 1. Successful reservation
-// testReturnsCreatedWhenReservationIsSuccessfullyCreated
-// - Status: 201
-// - DB: Inserts new reservation
-// - Factory: User::factory(), Room::factory()
-// - Route: POST /api/rooms/{room}/reservations
-// - Data: Valid start_date, end_date
-// - Response: JSON with id, room_id, user_id, start_date, end_date
+## 🧠 Prompt-Driven Workflow Summary
 
-// 2. End date before start date
-// testReturnsUnprocessableEntityWhenEndDateIsBeforeStartDate
-// - Status: 422
-// - DB: No change
-// - Factory: User::factory(), Room::factory()
-// - Route: POST /api/rooms/{room}/reservations
-// - Data: end_date before start_date
-// - Response: Validation error structure
+| Step | Action |
+|------|--------|
+| 1️⃣   | Generate feature tests using structured prompt |
+| 2️⃣   | Implement controller logic to pass tests        |
+| 3️⃣   | Apply Laravel 12 & PHP 8.2 best practices       |
+| 4️⃣   | Repeat per feature                              |
 
-// 3. Room not found
-// testReturnsNotFoundWhenRoomDoesNotExist
-// - Status: 404
-// - DB: No change
-// - Factory: User::factory()
-// - Route: POST /api/rooms/99999/reservations
-// - Data: Valid reservation payload
-// - Response: Not Found error
+---
 
-// 4. Double booking
-// testReturnsConflictWhenRoomIsAlreadyReservedForGivenDates
-// - Status: 409
-// - DB: Prevents overlapping reservation insert
-// - Factory: User::factory(), Room::factory(), Reservation::factory()
-// - Route: POST /api/rooms/{room}/reservations
-// - Data: Dates overlap existing reservation
-// - Response: Conflict error
+## 📽️ Presentation
 
-// 5. Unauthorized request
-// testReturnsUnauthorizedWhenUserIsNotAuthenticated
-// - Status: 401
-// - DB: No change
-// - Factory: Room::factory()
-// - Route: POST /api/rooms/{room}/reservations
-// - Data: Valid payload, no auth
-// - Response: Unauthorized error
+Want a visual walkthrough? Check out the project presentation:
 
-// 6. Forbidden access
-// testReturnsForbiddenWhenUserLacksPermissionToReserveRoom
-// - Status: 403
-// - DB: No change
-// - Factory: User::factory(), Room::factory()
-// - Route: POST /api/rooms/{room}/reservations
-// - Data: Valid, user lacks role
-// - Response: Forbidden error
+👉 [View Presentation Slides](https://fhholding.sharepoint.com/:p:/s/MTTechnology/EQri_IORFVNIjpvkDlZWMqMBrH1XZSjdczysWjBYX4HJvA?e=0jHZrO)
 
-// 7. Missing start_date
-// testReturnsValidationErrorWhenStartDateIsMissing
-// - Status: 422
-// - DB: No change
-// - Factory: User::factory(), Room::factory()
-// - Route: POST /api/rooms/{room}/reservations
-// - Data: Missing start_date
-// - Response: Validation error
+---
 
-// 8. Missing end_date
-// testReturnsValidationErrorWhenEndDateIsMissing
-// - Status: 422
-// - DB: No change
-// - Factory: User::factory(), Room::factory()
-// - Route: POST /api/rooms/{room}/reservations
-// - Data: Missing end_date
-// - Response: Validation error
+## 💡 Example Features
 
-// 9. Invalid room ID format
-// testReturnsNotFoundWhenRoomIdIsNonNumeric
-// - Status: 404
-// - DB: No change
-// - Factory: User::factory()
-// - Route: POST /api/rooms/abc/reservations
-// - Data: Valid payload
-// - Response: Not Found error
+- Room creation and management
+- Room reservation with date validation
+- Cancellation and conflict prevention
+- Room availability listing
+
+---
+
+## 📄 License
+
+This project is licensed under the **MIT License**. Use freely with attribution.
